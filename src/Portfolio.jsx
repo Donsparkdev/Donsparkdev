@@ -33,6 +33,7 @@ const GLOBAL_CSS = `
   @keyframes cursorBlink  { 0%,100%{opacity:.8} 50%{opacity:0} }
   @keyframes loaderSpin   { to{transform:rotate(360deg)} }
   @keyframes countUp     { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes blogIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
   @keyframes waPulse     { 0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.4)} 70%{box-shadow:0 0 0 12px rgba(37,211,102,0)} }
   @keyframes waWiggle    { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-8deg)} 75%{transform:rotate(8deg)} }
 
@@ -69,6 +70,9 @@ const GLOBAL_CSS = `
   .cursor-ring.hovering { width:54px; height:54px; border-color:rgba(123,47,255,.5); }
 
   .blog-card { border-radius:16px; background:rgba(8,13,26,.8); border:1px solid rgba(0,200,255,.1); overflow:hidden; transition:all .3s; text-decoration:none; color:#e8eaf6; display:flex; flex-direction:column; }
+  .blog-card h3 { color:#e8eaf6 !important; -webkit-text-fill-color:#e8eaf6 !important; }
+  .blog-card p  { color:#a0aec0 !important; -webkit-text-fill-color:#a0aec0 !important; }
+  .blog-card span { -webkit-text-fill-color:inherit; }
   .blog-card:hover { transform:translateY(-6px); border-color:rgba(0,200,255,.3); box-shadow:0 20px 60px rgba(0,0,0,.4); }
 
   .pricing-card { border-radius:20px; padding:36px 32px; display:flex; flex-direction:column; gap:20px; position:relative; overflow:hidden; transition:all .3s; }
@@ -193,8 +197,8 @@ function GlobalStyles() {
     // SEO Meta tags
     const metas = [
       { name:"description",       content:"Uchenna Chidera Onyesom — Full Stack Developer from Abuja, Nigeria. Building scalable web apps with React, Node.js & MongoDB. Open for freelance & full-time roles." },
-      { name:"keywords",          content:"Full Stack Developer Nigeria, React Developer Abuja, Node.js Developer, MongoDB, Web Developer Nigeria, API Development, Donspark" },
-      { name:"author",            content:"Uchenna Chidera Onyesom" },
+      { name:"keywords",          content:"Full Stack Developer Nigeria, React Developer Abuja, Node.js Developer, MongoDB, Web Developer Nigeria, API Development, Donspark, donsparkdev" },
+      { name:"author",            content:"Uchenna Chidera Onyesom (Donsparkdev" },
       { property:"og:title",      content:"Uchenna Chidera Onyesom — Full Stack Developer" },
       { property:"og:description",content:"Building scalable, secure & modern web applications. React · Node.js · MongoDB · REST APIs. Based in Abuja, Nigeria." },
       { property:"og:url",        content:"https://donsparkdev.netlify.app" },
@@ -223,13 +227,25 @@ function GlobalStyles() {
 
 function useReveal() {
   useEffect(() => {
-    const els = document.querySelectorAll(".reveal");
-    const obs = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } }),
-      { threshold: 0.1 }
-    );
-    els.forEach(el => obs.observe(el));
-    return () => obs.disconnect();
+    // Small delay so DOM is ready after state changes (e.g. blog expand)
+    const timer = setTimeout(() => {
+      const els = document.querySelectorAll(".reveal:not(.visible)");
+      const obs = new IntersectionObserver(
+        entries => entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); }
+        }),
+        { threshold: 0.05 }
+      );
+      els.forEach(el => obs.observe(el));
+      // Also immediately mark elements already in viewport
+      els.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          el.classList.add("visible");
+        }
+      });
+    }, 50);
+    return () => clearTimeout(timer);
   });
 }
 
@@ -937,20 +953,20 @@ function Blog() {
   return (
     <>
       {active && <ArticleReader post={active} onClose={()=>setActive(null)}/>}
-      <section id="blog" style={{padding:"100px 5%",background:"#080d1a"}}>
+      <section id="blog" style={{padding:"100px 5%",background:"#080d1a",color:"#e8eaf6"}}>
         <SectionHeader tag="Articles" title="Dev" accent="Blog" desc="Practical guides, tutorials and insights from real-world full stack development experience."/>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:24,maxWidth:1100,margin:"0 auto"}}>
           {visible.map((p,i)=>(
-            <div key={p.id} onClick={()=>setActive(p)} className={`blog-card reveal reveal-d${i%4+1}`} style={{cursor:"pointer"}}>
+            <div key={p.id} onClick={()=>setActive(p)} className="blog-card" style={{cursor:"pointer",opacity:1,transform:"translateY(0)",animation:`blogIn .4s ease ${i*0.08}s both`}}>
               <div style={{padding:"18px 24px 14px",background:p.color,borderBottom:`1px solid ${p.border}`}}>
-                <span style={{fontFamily:"'DM Mono',monospace",fontSize:".66rem",color:"#00c8ff",letterSpacing:2,textTransform:"uppercase"}}>{p.tag}</span>
+                <span style={{fontFamily:"'DM Mono',monospace",fontSize:".66rem",color:"#00c8ff",WebkitTextFillColor:"#00c8ff",letterSpacing:2,textTransform:"uppercase"}}>{p.tag}</span>
               </div>
-              <div style={{padding:24,display:"flex",flexDirection:"column",gap:12,flex:1}}>
-                <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:"1rem",fontWeight:700,lineHeight:1.4,color:"#e8eaf6"}}>{p.title}</h3>
-                <p style={{color:"#a0aec0",fontSize:".85rem",lineHeight:1.7,flex:1}}>{p.desc}</p>
+              <div style={{padding:24,display:"flex",flexDirection:"column",gap:12,flex:1,background:"rgba(8,13,26,.85)"}}>
+                <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:"1rem",fontWeight:700,lineHeight:1.4,color:"#e8eaf6 !important"}}>{p.title}</h3>
+                <p style={{color:"#a0aec0",fontSize:".85rem",lineHeight:1.7,flex:1,WebkitTextFillColor:"#a0aec0"}}>{p.desc}</p>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:12,borderTop:"1px solid rgba(255,255,255,.05)"}}>
-                  <span style={{fontFamily:"'DM Mono',monospace",fontSize:".68rem",color:"#6b7a99"}}>{p.date}</span>
-                  <span style={{fontFamily:"'DM Mono',monospace",fontSize:".68rem",color:"#00c8ff",display:"flex",alignItems:"center",gap:6}}>
+                  <span style={{fontFamily:"'DM Mono',monospace",fontSize:".68rem",color:"#6b7a99",WebkitTextFillColor:"#6b7a99"}}>{p.date}</span>
+                  <span style={{fontFamily:"'DM Mono',monospace",fontSize:".68rem",color:"#00c8ff",WebkitTextFillColor:"#00c8ff",display:"flex",alignItems:"center",gap:6}}>
                     {p.readTime}
                     <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                   </span>
@@ -960,7 +976,7 @@ function Blog() {
           ))}
         </div>
         <div className="reveal" style={{textAlign:"center",marginTop:40}}>
-          <button onClick={()=>setExpanded(!expanded)} className="btn-secondary">
+          <button onClick={()=>setExpanded(e=>!e)} className="btn-secondary" style={{color:"#e8eaf6",WebkitTextFillColor:"#e8eaf6"}}>
             {expanded?"Show Less ↑":"View All Articles →"}
           </button>
         </div>
@@ -969,6 +985,9 @@ function Blog() {
   );
 }
 
+/* ══════════════════════════════════════════
+   PRICING SECTION
+══════════════════════════════════════════ */
 /* ══════════════════════════════════════════
    PRICING SECTION
 ══════════════════════════════════════════ */
@@ -1226,7 +1245,7 @@ function Contact() {
               {[
                 {icon:"📧",label:"Email",   value:"onyuchennachidera@gmail.com",     href:"mailto:onyuchennachidera@gmail.com"},
                 {icon:"📱",label:"WhatsApp",value:"+234 811 388 2005",              href:"tel:+2348113882005"},
-                {icon:"💼",label:"LinkedIn",value:"Uchenna Chidera Onyesom",        href:"https://www.linkedin.com/in/uchenna-chidera-onyesom-72b973345"},
+                {icon:"💼",label:"LinkedIn",value:"Uchenna Chidera Onyesom",        href:"https://linkedin.com/uchenna-chidera-onyesom-72b973345"},
                 {icon:"🐙",label:"GitHub",  value:`github.com/${GITHUB_USERNAME}`, href:`https://github.com/${GITHUB_USERNAME}`},
               ].map(c=>(
                 <a key={c.label} href={c.href} className="contact-item" target={c.href.startsWith("http")?"_blank":undefined} rel="noreferrer">
@@ -1241,7 +1260,7 @@ function Contact() {
             <div style={{display:"flex",gap:12}}>
               {[
                 {t:"GitHub",   h:`https://github.com/${GITHUB_USERNAME}`,svg:<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>},
-                {t:"LinkedIn", h:"https://www.linkedin.com/in/uchenna-chidera-onyesom-72b973345",svg:<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>},
+                {t:"LinkedIn", h:"https://linkedin.com/uchenna-chidera-onyesom-72b973345",svg:<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>},
                 {t:"YouTube",  h:"#",svg:<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>},
                 {t:"Twitter",  h:"#",svg:<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>},
               ].map(s=>(
