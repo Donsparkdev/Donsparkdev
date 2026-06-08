@@ -306,31 +306,13 @@ export function WhatsAppFloat() {
   );
 }
 
-export function Logo({ size = 36 }) {
+export function Logo({ size = 36 }) { 
   return (
-    <svg className="logo-svg" width={size * 3} height={size} viewBox="0 0 108 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"   stopColor="#00c8ff"/>
-          <stop offset="100%" stopColor="#7b2fff"/>
-        </linearGradient>
-        <linearGradient id="underlineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%"   stopColor="#00c8ff" stopOpacity=".7"/>
-          <stop offset="100%" stopColor="#7b2fff" stopOpacity=".7"/>
-        </linearGradient>
-        <filter id="logoGlowF" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="1.2" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <text x="1"  y="26" fontFamily="'DM Mono',monospace" fontSize="20" fontWeight="500" fill="url(#logoGrad)" filter="url(#logoGlowF)">&lt;</text>
-      <text x="19" y="25" fontFamily="'Syne',sans-serif"   fontSize="16" fontWeight="800" fill="url(#logoGrad)" letterSpacing="-0.3" filter="url(#logoGlowF)">UCO</text>
-      <text x="65" y="26" fontFamily="'DM Mono',monospace" fontSize="20" fontWeight="500" fill="url(#logoGrad)" filter="url(#logoGlowF)">/&gt;</text>
-      <rect x="95" y="11" width="3" height="15" rx="1" fill="#00c8ff" opacity=".85">
-        <animate attributeName="opacity" values="0.85;0;0.85" dur="1.1s" repeatCount="indefinite"/>
-      </rect>
-      <rect x="19" y="29" width="46" height="1.5" rx="1" fill="url(#underlineGrad)"/>
-    </svg>
+    <img 
+      src="/logo.png" 
+      alt="Donsparkdev" 
+      style={{ height: size, width: 'auto' }}
+    />
   );
 }
 

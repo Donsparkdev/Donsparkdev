@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const GITHUB_USERNAME = "Donspark23";
+const GITHUB_USERNAME = "Donsparkdev";
 const GITHUB_API       = `https://api.github.com/users/${GITHUB_USERNAME}`;
 const GITHUB_REPOS_API = `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`;
 

@@ -1,7 +1,7 @@
 import { S, SectionHeader, useReveal, Footer } from "../shared";
 
 /* Tools I Use */
- — Affiliate Links
+/*  Affiliate Links
 ══════════════════════════════════════════ */
 const TOOL_CATEGORIES = [
   {
@@ -111,8 +111,5 @@ function Tools() {
     </>
   );
 }
-
-export default Store;
-
 
 export default Tools;
