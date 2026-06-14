@@ -343,7 +343,7 @@ const PLANS = [
   },
 ];
 
-export default function Blog() {
+export default function Blogpage() {
   useReveal();
   return (
     <>
