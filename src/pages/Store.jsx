@@ -10,7 +10,7 @@ const PRODUCTS = [
     price:"$12", originalPrice:"$20",
     stack:["Node.js","Express","MongoDB","JWT","bcrypt"],
     features:["Full register/login flow","Refresh token rotation","Password reset via email","Protected route middleware","Postman collection included","Clean project structure","README with setup guide"],
-    gumroadUrl:"https://gumroad.com/donsparkdev",
+    gumroadUrl:"https://donsparkdev.gumroad.com/l/kajja",
     badge:"Best Seller",
     badgeColor:"rgba(0,200,255,.15)",
   },
