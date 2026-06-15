@@ -6,7 +6,7 @@ import { GlobalStyles, CustomCursor, WhatsAppFloat, Loader, Logo, S } from "./sh
 import Home       from "./pages/Home";
 import About      from "./pages/About";
 import Projects   from "./pages/Projects";
-import Blogpage       from "./pages/Blog";
+import Blog       from "./pages/Blog";
 import Services   from "./pages/Services";
 import GitHub     from "./pages/GitHub";
 import Store      from "./pages/Store";
