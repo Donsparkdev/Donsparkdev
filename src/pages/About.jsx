@@ -16,6 +16,7 @@ const SKILL_BARS = [
 
 
 function About() {
+  useReveal();
   return (
     <section id="about" style={{padding:"100px 5%",background:"#080d1a"}}>
       <div className="about-grid" style={{display:"grid",gridTemplateColumns:"1fr 1.4fr",gap:60,alignItems:"center",maxWidth:1100,margin:"0 auto"}}>
@@ -67,6 +68,7 @@ function About() {
 ══════════════════════════════════════════ */
 
 function Skills() {
+  useReveal();
   const barsRef = useRef([]);
   useEffect(()=>{
     const obs = new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("anim");obs.unobserve(e.target);}}),{threshold:.5});
@@ -107,7 +109,6 @@ function Skills() {
 ══════════════════════════════════════════ */
 
 export default function AboutPage() {
-  useReveal();
   return (
     <>
       <About/>
